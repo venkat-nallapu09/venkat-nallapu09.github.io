@@ -96,21 +96,9 @@
 
 <section id="projects">
   <h2>My Projects</h2>
-  <div class="projects">
-    <div class="card">
-      <h3>Project One</h3>
-      <p>A short description of your project goes here.</p>
-    </div>
-    <div class="card">
-      <h3>Project Two</h3>
-      <p>Add more card blocks as needed.</p>
-    </div>
-    <div class="card">
-      <h3>Project Three</h3>
-      <p>Showcase your achievements beautifully.</p>
-    </div>
-  </div>
+  <div class="projects" id="repo-list">Loading projects...</div>
 </section>
+
 
 <section id="contact">
   <h2>Contact</h2>
@@ -122,5 +110,36 @@
   © 2025 Your Name. All Rights Reserved.
 </footer>
 
+  <script>
+  const username = "venkat-nallapu09"; // <-- change this
+
+  fetch(`https://api.github.com/users/${username}/repos?sort=updated`)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("repo-list");
+      container.innerHTML = "";
+
+      data.forEach(repo => {
+        // ignore forks if you want
+        if (repo.fork) return;
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <h3>${repo.name}</h3>
+          <p>${repo.description || "No description available"}</p>
+          <a href="${repo.html_url}" target="_blank">
+            <button>View Repo</button>
+          </a>
+        `;
+        container.appendChild(card);
+      });
+    })
+    .catch(() => {
+      document.getElementById("repo-list").innerHTML = "⚠ Failed to load repositories";
+    });
+</script>
+
+  
 </body>
 </html>
